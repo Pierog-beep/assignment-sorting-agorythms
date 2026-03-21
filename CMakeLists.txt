@@ -3,4 +3,17 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(untitled main.cpp)
+add_executable(untitled main.cpp
+        sort/ShellSort.cpp
+        sort/ShellSort.h
+        sort/HybridSort.cpp
+        sort/HybridSort.h
+        sort/HeapSort.cpp
+        sort/HeapSort.h
+        utils/ArrayGenerator.cpp
+        utils/ArrayGenerator.h
+        utils/SequenceChecker.cpp
+        utils/SequenceChecker.h
+        utils/utils.cpp
+        utils/utils.h
+)
