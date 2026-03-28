@@ -4,6 +4,8 @@
 
 #ifndef UNTITLED_UTILS_H
 #define UNTITLED_UTILS_H
+#include <fstream>
+#include <sstream>
 #include <random>
 #include <vector>
 
@@ -17,12 +19,23 @@ namespace utils {
         static std::vector<T> generateIntArray(int size, int minValue, int maxValue) {
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_real_distribution<T> dist(minValue, maxValue);
-
             std::vector<T> arr(size);
-            for (int i = 0; i < size; i++) {
-                arr[i] = dist(gen);
+
+            if constexpr (std::is_integral_v<T>) {
+                std::uniform_int_distribution<T> dist(minValue, maxValue);
+
+                for (int i = 0; i < size; i++) {
+                    arr[i] = dist(gen);
+                }
+
+            } else if constexpr (std::is_floating_point_v<T>) {
+                std::uniform_real_distribution<T> dist(minValue, maxValue);
+
+                for (int i = 0; i < size; i++) {
+                    arr[i] = dist(gen);
+                }
             }
+
             return arr;
         }
 
@@ -66,6 +79,36 @@ namespace utils {
                 }
             }
             return true;
+        }
+    };
+
+    class FileReader {
+    public:
+        template<typename T>
+        static std::vector<T> arrayFromFile(std::string filePath) {
+            std::ifstream file(filePath);
+            std::vector<T> result;
+            std::string line;
+            T value;
+
+            if (!file.is_open()) {
+                std::cout << "Error opening file " << filePath << std::endl;
+                return result;
+            }
+
+            if (std::getline(file, line)) {
+                std::stringstream ss(line);
+                std::string token;
+
+                while (std::getline(ss, token, ',')) {
+                    std::stringstream convert(token);
+                    convert >> value;
+                    result.push_back(value);
+                }
+            }
+
+            file.close();
+            return result;
         }
     };
 };
