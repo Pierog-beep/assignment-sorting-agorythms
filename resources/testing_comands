@@ -1,0 +1,18 @@
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort quick int 
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort heap int
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort shell_shell int 
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort shell_knuth int
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort hybrid int 10
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort hybrid int 5
+load int /home/pierog/CLionProjects/untitled/resources/Test_Array.csv
+sort hybrid int 2 
+
+quit
+
+

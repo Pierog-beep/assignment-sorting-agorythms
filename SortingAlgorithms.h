@@ -10,31 +10,31 @@ namespace SortingAlgorithms {
     class HeapSort {
         template<typename T>
         static void buildMaxHeap(std::vector<T> &arr, int size) {
-            int c, r;
+            int child, parent;
             for (int i = 1; i < size; i++) {
-                c = i;
+                child = i;
 
                 do {
-                    r = (c - 1) / 2;
-                    if (arr[r] < arr[c]) std::swap(arr[r], arr[c]);
-                    c = r;
-                } while (c != 0);
+                    parent = (child - 1) / 2;
+                    if (arr[parent] < arr[child]) std::swap(arr[parent], arr[child]);
+                    child = parent;
+                } while (child != 0);
             }
         }
 
         template<typename T>
-        static void heapify(std::vector<T> &arr, int size) {
-            int c, r;
+        static void heapify(std::vector<T> &heap, int size) {
+            int child, root;
             for (int j = size - 1; j > 0; j--) {
-                std::swap(arr[j], arr[0]);
-                r = 0;
+                std::swap(heap[j], heap[0]);
+                root = 0;
 
                 do {
-                    c = 2 * r + 1;
-                    if (arr[c] < arr[c + 1] && c < j - 1) c++;
-                    if (arr[r] < arr[c] && c < j) std::swap(arr[r], arr[c]);
-                    r = c;
-                } while (c < j);
+                    child = 2 * root + 1;
+                    if (heap[child] < heap[child + 1] && child < j - 1) child++;
+                    if (heap[root] < heap[child] && child < j) std::swap(heap[root], heap[child]);
+                    root = child;
+                } while (child < j);
             }
         }
 
@@ -48,21 +48,8 @@ namespace SortingAlgorithms {
 
     class HybridSort {
         template<typename T>
-        static int partition(std::vector<T> &arr, int left_index, int right_index) {
-            T pivot = arr[right_index];
-            int i = left_index, j = left_index;
-
-            for (; i < right_index; i++) {
-                if (arr[i] < pivot) std::swap(arr[i], arr[j++]);
-            }
-
-            std::swap(arr[j], arr[right_index]);
-            return j;
-        }
-
-        template<typename T>
         static void insertionSort(std::vector<T> &arr, int left_index, int right_index) {
-            for (int i = left_index + 1; i <= right_index; i++) {
+            for (int i = left_index; i <= right_index; i++) {
                 int j = i;
                 while (j > left_index && arr[j - 1] > arr[j]) {
                     std::swap(arr[j], arr[j - 1]);
@@ -74,22 +61,29 @@ namespace SortingAlgorithms {
     public:
         template<typename T>
         static void sort(std::vector<T> &arr, int threshold, int left_index, int right_index) {
-            while (left_index < right_index) {
-                if (right_index - left_index < threshold) {
-                    insertionSort(arr, left_index, right_index);
-                    break;
-                }
+            if (right_index - left_index + 1 <= threshold) {
+                insertionSort(arr, left_index, right_index);
+                return;
+            }
 
-                int pivot = partition(arr, left_index, right_index);
+            int pivot = (left_index + right_index) / 2;
+            T pivotValue = arr[pivot];
 
-                if (pivot - left_index < right_index - pivot) {
-                    sort(arr, threshold, left_index, pivot - 1);
-                    left_index = pivot + 1;
-                } else {
-                    sort(arr, threshold, pivot + 1, right_index);
-                    right_index = pivot - 1;
+            std::swap(arr[pivot], arr[right_index]);
+
+            int i = left_index;
+
+            for (int j = left_index; j < right_index; j++) {
+                if (arr[j] <= pivotValue) {
+                    std::swap(arr[i], arr[j]);
+                    i++;
                 }
             }
+
+            std::swap(arr[i], arr[right_index]);
+
+            sort(arr, threshold, left_index, i - 1);
+            sort(arr, threshold, i + 1, right_index);
         }
     };
 
@@ -97,7 +91,7 @@ namespace SortingAlgorithms {
     public:
         template<typename T>
         static void sort(std::vector<T> &arr, int left_index, int right_index) {
-            if (left_index >= right_index) { return; }
+            if (left_index >= right_index) return;
 
             int pivot = (left_index + right_index) / 2;
             T pivotValue = arr[pivot];

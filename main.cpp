@@ -38,14 +38,16 @@ template<typename T>
 void handleSort(const string &type, vector<T> &arr, int size, const string &thresholdString) {
     int left = 0, right = size - 1;
 
-    auto start = chrono::high_resolution_clock::now();
-    if (type == "hybrid") SortingAlgorithms::HybridSort::sort(arr, stoi(thresholdString), left, right);
-    displayTime(start, chrono::high_resolution_clock::now());
+    if (type == "hybrid") {
+        auto start = chrono::high_resolution_clock::now();
+        SortingAlgorithms::HybridSort::sort(arr, stoi(thresholdString), left, right);
+        displayTime(start, chrono::high_resolution_clock::now());
+    }
 }
 
 template<typename T>
 void handleGeneration(const std::string &minValueString, const std::string &maxValueString,
-                      const std::string &sizeString, std::vector<T> &arr) {
+                      const std::string &sizeString, std::vector<T> &arr, int &size) {
     T min, max;
 
     stringstream min_stream(minValueString);
@@ -55,11 +57,13 @@ void handleGeneration(const std::string &minValueString, const std::string &maxV
     max_stream >> max;
 
     arr = utils::ArrayGenerator::generateArray<T>(stoi(sizeString), min, max);
+    size = stoi(sizeString);
 }
 
 template<typename T>
 void handleGeneration(const string &minValueString, const string &maxValueString,
-                      const string &sizeString, vector<T> &arr, string &thresholdString, string &firstOrder) {
+                      const string &sizeString, vector<T> &arr, string &thresholdString, string &firstOrder,
+                      int &size) {
     T min, max;
 
     stringstream min_stream(minValueString);
@@ -71,11 +75,13 @@ void handleGeneration(const string &minValueString, const string &maxValueString
     if (firstOrder == "ASC") {
         arr = utils::ArrayGenerator::generateCustomArray<T>(stoi(sizeString), min, max, utils::ASC,
                                                             stof(thresholdString));
+        size = stoi(sizeString);
     }
 
     if (firstOrder == "DESC") {
         arr = utils::ArrayGenerator::generateCustomArray<T>(stoi(sizeString), min, max, utils::DESC,
                                                             stof(thresholdString));
+        size = stoi(sizeString);
     }
 }
 
@@ -143,22 +149,22 @@ int main() {
             if (userResponse[1] == "custom") {
                 if (userResponse[2] == "int") {
                     handleGeneration<int>(userResponse[3], userResponse[4], userResponse[5], intArr, userResponse[6],
-                                          userResponse[7]);
+                                          userResponse[7], intArrSize);
                     continue;
                 }
                 if (userResponse[2] == "float") {
                     handleGeneration<float>(userResponse[3], userResponse[4], userResponse[5], floatArr,
                                             userResponse[6],
-                                            userResponse[7]);
+                                            userResponse[7], floatArrSize);
                     continue;
                 }
             }
             if (userResponse[1] == "int") {
-                handleGeneration<int>(userResponse[2], userResponse[3], userResponse[4], intArr);
+                handleGeneration<int>(userResponse[2], userResponse[3], userResponse[4], intArr, intArrSize);
                 continue;
             }
             if (userResponse[1] == "float") {
-                handleGeneration<float>(userResponse[2], userResponse[3], userResponse[4], floatArr);
+                handleGeneration<float>(userResponse[2], userResponse[3], userResponse[4], floatArr, floatArrSize);
                 continue;
             }
         } else if (userResponse[0] == "quit") {

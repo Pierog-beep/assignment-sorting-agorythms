@@ -94,7 +94,7 @@ namespace utils {
     class ArrayPrint {
     public:
         template<typename T>
-        static void printArray(std::vector<T> arr, int size) {
+        static void printArray(std::vector<T> &arr, int size) {
             std::cout << "0:";
             for (int i = 0; i < size; i++) {
                 if (i % 10 == 0 && i != 0) std::cout << std::endl << i << ": ";
