@@ -15,7 +15,7 @@ namespace utils {
     class ArrayGenerator {
     public:
         template<typename T>
-        static std::vector<T> generateArray(int size, int minValue, int maxValue) {
+        static std::vector<T> generateArray(int size, T minValue, T maxValue) {
             std::random_device rd;
             std::mt19937 gen(rd());
             std::vector<T> arr(size);
@@ -32,7 +32,7 @@ namespace utils {
         }
 
         template<typename T>
-        static std::vector<T> generateCustomArray(int size, int minValue, int maxValue, order firstOrder,
+        static std::vector<T> generateCustomArray(int size, T minValue, T maxValue, order firstOrder,
                                                   float changeSorting) {
             std::vector<T> arr = generateArray<T>(size, minValue, maxValue);
 
@@ -103,6 +103,4 @@ namespace utils {
         }
     };
 };
-
-
 #endif //UNTITLED_UTILS_H
