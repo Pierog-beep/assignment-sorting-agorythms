@@ -16,12 +16,12 @@ long long handleSort(const string &type, vector<T> &arr, int size) {
 
     if (type == "shell_s") {
         start = chrono::high_resolution_clock::now();
-        SortingAlgorithms::ShellSort::sortShell(arr, arr.size());
+        SortingAlgorithms::ShellSort::sortShell(arr, size);
         return chrono::duration_cast<chrono::nanoseconds>(chrono::high_resolution_clock::now() - start).count();
     }
     if (type == "shell_k") {
         start = chrono::high_resolution_clock::now();
-        SortingAlgorithms::ShellSort::sortKnuth(arr, arr.size());
+        SortingAlgorithms::ShellSort::sortKnuth(arr, size);
         return chrono::duration_cast<chrono::nanoseconds>(chrono::high_resolution_clock::now() - start).count();
     }
     if (type == "quick") {
@@ -31,22 +31,18 @@ long long handleSort(const string &type, vector<T> &arr, int size) {
     }
     if (type == "heap") {
         start = chrono::high_resolution_clock::now();
-        SortingAlgorithms::HeapSort::sort(arr, arr.size());
+        SortingAlgorithms::HeapSort::sort(arr, size);
         return chrono::duration_cast<chrono::nanoseconds>(chrono::high_resolution_clock::now() - start).count();
     }
     return -1;
 }
 
 template<typename T>
-long long handleSort(const string &type, vector<T> &arr, int size, int threshold) {
+long long handleSort(vector<T> &arr, int size, int threshold) {
     int left = 0, right = size - 1;
-
-    if (type == "hybrid") {
-        auto start = chrono::high_resolution_clock::now();
-        SortingAlgorithms::HybridSort::sort(arr, threshold, left, right);
-        return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - start).count();
-    }
-    return -1;
+    auto start = chrono::high_resolution_clock::now();
+    SortingAlgorithms::HybridSort::sort(arr, threshold, left, right);
+    return chrono::duration_cast<chrono::nanoseconds>(chrono::high_resolution_clock::now() - start).count();
 }
 
 void fullTest(const string &type, const int size, const int repetitions, const int threshold) {
@@ -58,6 +54,8 @@ void fullTest(const string &type, const int size, const int repetitions, const i
 
     long long randomITime = 0, ascITime = 0, descITime = 0, mixedITime = 0, randomFTime = 0, ascFTime = 0, descFTime = 0
             , mixedFTime = 0;
+
+    printf("Results [ms] (Random, Mixed, Descending, Ascending):\n");
 
     for (int i = 0; i < repetitions; i++) {
         // Int arr generation
@@ -74,10 +72,10 @@ void fullTest(const string &type, const int size, const int repetitions, const i
 
         // Gathering int arr data
         if (type == "hybrid") {
-            randomITime += handleSort<int>(type, randomIArr, size, threshold);
-            mixedITime += handleSort<int>(type, mixedIArr, size, threshold);
-            descITime += handleSort<int>(type, descIArr, size, threshold);
-            ascITime += handleSort<int>(type, ascIArr, size, threshold);
+            randomITime += handleSort<int>(randomIArr, size, threshold);
+            mixedITime += handleSort<int>(mixedIArr, size, threshold);
+            descITime += handleSort<int>(descIArr, size, threshold);
+            ascITime += handleSort<int>(ascIArr, size, threshold);
         } else {
             randomITime += handleSort<int>(type, randomIArr, size);
             mixedITime += handleSort<int>(type, mixedIArr, size);
@@ -95,10 +93,10 @@ void fullTest(const string &type, const int size, const int repetitions, const i
 
         // Gathering float arr data
         if (type == "hybrid") {
-            randomFTime += handleSort<float>(type, randomFArr, size, threshold);
-            mixedFTime += handleSort<float>(type, mixedFArr, size, threshold);
-            descFTime += handleSort<float>(type, descFArr, size, threshold);
-            ascFTime += handleSort<float>(type, ascFArr, size, threshold);
+            randomFTime += handleSort<float>(randomFArr, size, threshold);
+            mixedFTime += handleSort<float>(mixedFArr, size, threshold);
+            descFTime += handleSort<float>(descFArr, size, threshold);
+            ascFTime += handleSort<float>(ascFArr, size, threshold);
         } else {
             randomFTime += handleSort<float>(type, randomFArr, size);
             mixedFTime += handleSort<float>(type, mixedFArr, size);
@@ -118,12 +116,11 @@ void fullTest(const string &type, const int size, const int repetitions, const i
     // Calculating and showing the results
     double transform = repetitions * 1000000;
 
-    printf("Results [ms]:\n");
-    printf("Integer(Random, Mixed, Descending, Ascending):\n%.4f;%.4f;%.4f;%.4f;\n",
+    printf("Int;%.4f;%.4f;%.4f;%.4f;\n",
            (double) randomITime / transform, (double) mixedITime / transform, (double) descITime / transform,
            (double) ascITime / transform);
 
-    printf("Float(Random, Mixed, Descending, Ascending):\n%.4f;%.4f;%.4f;%.4f;\n",
+    printf("Float;%.4f;%.4f;%.4f;%.4f;\n",
            (double) randomFTime / transform, (double) mixedFTime / transform, (double) descFTime / transform,
            (double) ascFTime / transform);
 }
@@ -199,11 +196,11 @@ int main() {
             // Sorting arrays
             if (userResponse[1] == "hybrid") {
                 if (userResponse[2] == "int") {
-                    displayTime(handleSort(userResponse[1], intArr, intArrSize, stoi(userResponse[3])));
+                    displayTime(handleSort(intArr, intArrSize, stoi(userResponse[3])));
                     continue;
                 }
                 if (userResponse[2] == "float") {
-                    displayTime(handleSort(userResponse[1], floatArr, floatArrSize, stoi(userResponse[3])));
+                    displayTime(handleSort(floatArr, floatArrSize, stoi(userResponse[3])));
                     continue;
                 }
             }

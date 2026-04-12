@@ -29,12 +29,15 @@ namespace SortingAlgorithms {
                 std::swap(heap[j], heap[0]);
                 root = 0;
 
-                do {
+                while (true) {
                     child = 2 * root + 1;
-                    if (heap[child] < heap[child + 1] && child < j - 1) child++;
-                    if (heap[root] < heap[child] && child < j) std::swap(heap[root], heap[child]);
-                    root = child;
-                } while (child < j);
+                    if (child >= j) break;
+                    if (child + 1 < j && heap[child] < heap[child + 1]) child++;
+                    if (heap[root] < heap[child]) {
+                        std::swap(heap[root], heap[child]);
+                        root = child;
+                    } else break;
+                }
             }
         }
 
