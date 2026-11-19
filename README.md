@@ -15,7 +15,7 @@ The program allows users to generate or load arrays of integers and floating-poi
 - Displaying generated or loaded arrays.
 - Measuring sorting execution time in nanoseconds.
 - Benchmarking sorting algorithms using multiple input distributions.
-- Verifying sorting correctness after each operation.## Implemented Algorithms
+- Verifying sorting correctness after each operation.
 
 ## Implemented Algorithms
 
@@ -27,9 +27,7 @@ The application provides the following sorting algorithms:
 | Shell Sort (Knuth) | `shell_k` | Shell Sort using the Knuth gap sequence. |
 | Quick Sort | `quick` | Recursive sorting algorithm based on partitioning the array around a pivot. |
 | Heap Sort | `heap` | Comparison-based sorting algorithm using a binary heap. |
-| Hybrid Sort | `hybrid` | Hybrid sorting algorithm with a configurable threshold. |
 
-The Hybrid Sort implementation combines Insertion Sort and Quick Sort. The threshold parameter determines when the algorithm switches between these two sorting algorithms.
 ## Input Data Generation
 
 The application supports two types of array generation:
@@ -128,21 +126,6 @@ sort shell_s int
 sort shell_k float
 ```
 
-### Hybrid Sort
-
-Hybrid Sort requires an additional threshold parameter:
-
-```bash
-sort hybrid <type> <threshold>
-```
-
-Example:
-
-```bash
-sort hybrid int 16
-sort hybrid float 32
-```
-
 After sorting, the program displays the execution time in nanoseconds.
 
 ## Benchmarking
@@ -152,7 +135,7 @@ The application includes a benchmarking mode that allows users to compare algori
 Syntax:
 
 ```bash
-test <algorithm> <size> <repetitions> <threshold>
+test <algorithm> <size> <repetitions> 
 ```
 
 Parameters:
@@ -160,13 +143,13 @@ Parameters:
 - `algorithm` – Sorting algorithm to test (`shell_s`, `shell_k`, `quick`, `heap`, or `hybrid`).
 - `size` – Number of elements in each test array.
 - `repetitions` – Number of benchmark repetitions.
-- `threshold` – Threshold parameter used by Hybrid Sort.
+
 
 Example:
 
 ```bash
-test quick 10000 10 16
-test hybrid 10000 10 16
+test quick 10000 10 
+test hybrid 10000 10 
 ```
 
 ### Benchmark Scenarios
@@ -183,17 +166,7 @@ Each benchmark iteration generates eight arrays:
 Each distribution is tested with both integer and floating-point values.
 
 The program measures the execution time of each sorting operation and calculates the average execution time over all repetitions.
-
-Results are displayed in milliseconds.
-
-Example output format:
-
-```text
-Results [ms] (Random, Mixed, Descending, Ascending):
-Int;...
-Float;...
-```
-
+Results are displayed in milliseconds and nanoseconds.
 The program also verifies that every resulting array is sorted in ascending order. If an algorithm produces an incorrectly sorted array, the benchmark stops and reports an error.
 
 ## Command Reference
@@ -205,7 +178,6 @@ The program also verifies that every resulting array is sorted in ascending orde
 | `load` | Loads an array from a file. |
 | `show` | Displays the current array. |
 | `sort` | Sorts an array using a selected algorithm. |
-| `sort hybrid` | Sorts an array using the hybrid algorithm and a threshold. |
 | `test` | Runs a performance benchmark. |
 | `quit` | Terminates the application. |
 
@@ -223,4 +195,3 @@ The application uses three main components:
 - Generating or loading a new array replaces the previous array of the same type.
 - Sorting operations modify the arrays directly.
 - Benchmark results depend on hardware, compiler optimizations, and input size.
-- The benchmark threshold parameter is passed to the sorting algorithm only when Hybrid Sort is selected.
