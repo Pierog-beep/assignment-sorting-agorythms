@@ -9,32 +9,27 @@
 namespace SortingAlgorithms {
     class HeapSort {
         template<typename T>
-        static void buildMaxHeap(std::vector<T> &arr, int size) {
-            int child, parent;
-            for (int i = 1; i < size; i++) {
-                child = i;
+        static void heapifyDown(std::vector<T> &arr, int size, int root) {
+            int largest = root;
+            int left = 2 * root + 1;
+            int right = 2 * root + 2;
 
-                do {
-                    parent = (child - 1) / 2;
-                    if (arr[parent] < arr[child]) std::swap(arr[parent], arr[child]);
-                    child = parent;
-                } while (child != 0);
+            if (left < size && arr[left] > arr[largest])
+                largest = left;
+
+            if (right < size && arr[right] > arr[largest])
+                largest = right;
+
+            if (largest != root) {
+                std::swap(arr[root], arr[largest]);
+                heapifyDown(arr, size, largest);
             }
         }
 
         template<typename T>
-        static void heapify(std::vector<T> &heap, int size) {
-            int child, root;
-            for (int j = size - 1; j > 0; j--) {
-                std::swap(heap[j], heap[0]);
-                root = 0;
-
-                do {
-                    child = 2 * root + 1;
-                    if (heap[child] < heap[child + 1] && child < j - 1) child++;
-                    if (heap[root] < heap[child] && child < j) std::swap(heap[root], heap[child]);
-                    root = child;
-                } while (child < j);
+        static void buildMaxHeap(std::vector<T> &arr, int size) {
+            for (int i = size / 2 - 1; i >= 0; i--) {
+                heapifyDown(arr, size, i);
             }
         }
 
@@ -42,14 +37,18 @@ namespace SortingAlgorithms {
         template<typename T>
         static void sort(std::vector<T> &arr, int size) {
             buildMaxHeap(arr, size);
-            heapify(arr, size);
+
+            for (int i = size - 1; i > 0; i--) {
+                std::swap(arr[0], arr[i]);
+                heapifyDown(arr, i, 0);
+            }
         }
     };
 
     class HybridSort {
         template<typename T>
         static void insertionSort(std::vector<T> &arr, int left_index, int right_index) {
-            for (int i = left_index; i <= right_index; i++) {
+            for (int i = left_index + 1; i <= right_index; i++) {
                 int j = i;
                 while (j > left_index && arr[j - 1] > arr[j]) {
                     std::swap(arr[j], arr[j - 1]);
@@ -60,30 +59,32 @@ namespace SortingAlgorithms {
 
     public:
         template<typename T>
-        static void sort(std::vector<T> &arr, int threshold, int left_index, int right_index) {
-            if (right_index - left_index + 1 <= threshold) {
-                insertionSort(arr, left_index, right_index);
+        static void sort(std::vector<T> &arr, int threshold, int left, int right) {
+            if (left >= right) return;
+
+            if (right - left + 1 <= threshold) {
+                insertionSort(arr, left, right);
                 return;
             }
 
-            int pivot = (left_index + right_index) / 2;
-            T pivotValue = arr[pivot];
+            int pivotIndex = left + (right - left) / 2;
+            T pivotValue = arr[pivotIndex];
 
-            std::swap(arr[pivot], arr[right_index]);
+            std::swap(arr[pivotIndex], arr[right]);
 
-            int i = left_index;
+            int i = left;
 
-            for (int j = left_index; j < right_index; j++) {
-                if (arr[j] <= pivotValue) {
+            for (int j = left; j < right; j++) {
+                if (arr[j] < pivotValue) {
                     std::swap(arr[i], arr[j]);
                     i++;
                 }
             }
 
-            std::swap(arr[i], arr[right_index]);
+            std::swap(arr[i], arr[right]);
 
-            sort(arr, threshold, left_index, i - 1);
-            sort(arr, threshold, i + 1, right_index);
+            sort(arr, threshold, left, i - 1);
+            sort(arr, threshold, i + 1, right);
         }
     };
 
