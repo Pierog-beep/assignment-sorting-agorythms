@@ -6,7 +6,7 @@
 using namespace std;
 
 void displayTime(long long duration) {
-    cout << duration << " ms" << endl;
+    cout << duration << " n" << endl;
 }
 
 template<typename T>
